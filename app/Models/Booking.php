@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Booking extends Model
 {
@@ -25,6 +26,22 @@ class Booking extends Model
     protected static function booted()
     {
         static::creating(function ($booking) {
+            // Generate booking_code jika belum ada
+            if (!$booking->booking_code) {
+                $dateCode = Carbon::now()->format('Ymd');
+                $randomCode = strtoupper(Str::random(6));
+                $bookingCode = "BK-{$dateCode}-{$randomCode}";
+
+                // Pastikan kode unik
+                while (Booking::where('booking_code', $bookingCode)->exists()) {
+                    $randomCode = strtoupper(Str::random(6));
+                    $bookingCode = "BK-{$dateCode}-{$randomCode}";
+                }
+
+                $booking->booking_code = $bookingCode;
+            }
+
+            // Hitung total_price (kode yang sudah ada)
             if ($booking->venue_id && $booking->event_start_date && $booking->event_end_date && !$booking->total_price) {
                 $startDate = Carbon::parse($booking->event_start_date);
                 $endDate = Carbon::parse($booking->event_end_date);

@@ -21,7 +21,7 @@ class Venue extends Model
 
     public function venueImages()
     {
-        return $this->hasMany(VenueImage::class);
+        return $this->hasMany(VenueImage::class, 'venue_id', 'id');
     }
 
     public function venueSchedules()
