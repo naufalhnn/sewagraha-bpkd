@@ -1,20 +1,35 @@
 <footer class="bg-secondary flex h-80 flex-col">
 		<div class="h-1/3 w-full">
 				<div class="mx-auto flex h-full w-full flex-row items-center justify-center space-x-4 bg-blue-200 text-left">
-						<div><img class="w-12" src="{{ asset('icons/LogoKabPekalongan.png') }}" alt=""></div>
+						<div>
+								<img class="w-12" src="{{ asset('icons/LogoKabPekalongan.png') }}" alt="">
+						</div>
 						<p class="text-3xl font-extralight text-gray-600">|</p>
-						<p class="text-base leading-tight text-gray-600">BPKD Kabupaten Pekalongan
-						</p>
+						<p class="text-base leading-tight text-gray-600">BPKD Kabupaten Pekalongan</p>
 				</div>
 		</div>
 		<div class="flex h-2/3 w-full flex-col items-center justify-center">
+				<!-- Navigation Links -->
 				<nav class="mb-6 flex justify-center space-x-6">
-						<a href="#" class="hover:text-primary text-gray-600">Beranda</a>
-						<a href="#" class="hover:text-primary text-gray-600">Tentang Kami</a>
-						<a href="#" class="hover:text-primary text-gray-600">Paket</a>
-						<a href="#" class="hover:text-primary text-gray-600">Kontak</a>
+						<a href="{{ route('home') }}"
+								class="{{ Route::is('home') ? 'text-primary font-semibold' : 'text-gray-600' }} hover:text-primary transition duration-300">
+								Beranda
+						</a>
+						<a href="{{ route('about') }}"
+								class="{{ Route::is('about') ? 'text-primary font-semibold' : 'text-gray-600' }} hover:text-primary transition duration-300">
+								Tentang Kami
+						</a>
+						<a href="{{ route('venues') }}"
+								class="{{ Route::is('venues') ? 'text-primary font-semibold' : 'text-gray-600' }} hover:text-primary transition duration-300">
+								Gedung
+						</a>
+						<a href="{{ route('contact') }}"
+								class="{{ Route::is('contact') ? 'text-primary font-semibold' : 'text-gray-600' }} hover:text-primary transition duration-300">
+								Kontak
+						</a>
 				</nav>
 
+				<!-- Social Media Links -->
 				<div class="mb-6 flex items-center justify-center space-x-4">
 						<a href="#" class="hover:text-primary text-gray-600">
 								<span class="sr-only">Facebook</span>
@@ -46,10 +61,9 @@
 						</a>
 				</div>
 
+				<!-- Copyright Text -->
 				<div class="text-center text-base text-gray-600">
 						<p>BPKD Kabupaten Pekalongan | 2025</p>
 				</div>
-
 		</div>
-
 </footer>

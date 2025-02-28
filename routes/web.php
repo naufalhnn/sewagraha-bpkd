@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AppController::class, 'index'])->name('home');
 Route::get('/details/{id}', [AppController::class, 'details'])->name('details');
+Route::get('/contact', [AppController::class, 'contact'])->name('contact');
+Route::get('/about', [AppController::class, 'about'])->name('about');
+Route::get('/venues', [AppController::class, 'venues'])->name('venues');
 
 
 Route::middleware('guest')->group(function () {
@@ -18,12 +21,13 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [AppController::class, 'index'])->name('home');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
     Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
-    Route::get('/payment/{id}', [PaymentController::class, 'index'])->name('payment.create');
+    Route::get('/payment/{id}', [PaymentController::class, 'create'])->name('payment.create');
+    Route::post('/payment/{id}', [PaymentController::class, 'store'])->name('payment.store');
+    Route::get('/success', [AppController::class, 'success'])->name('success');
 });
 
 // Dashboard redirect based on role

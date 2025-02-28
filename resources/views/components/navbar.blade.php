@@ -5,21 +5,31 @@
 						<div class="flex space-x-7">
 								<div>
 										<a href="#" class="flex items-center py-4">
-												<span class="text-lg font-semibold text-gray-500"><img class="w-10"
-																src="{{ asset('icons/LogoKabPekalongan.png') }}" alt=""></span>
+												<span class="text-lg font-semibold text-gray-500">
+														<img class="w-10" src="{{ asset('icons/LogoKabPekalongan.png') }}" alt="">
+												</span>
 										</a>
 								</div>
 						</div>
 
 						<!-- Primary Nav -->
 						<div class="hidden items-center space-x-2 md:flex">
-								<a href="#" class="text-primary px-2 py-4 font-medium">Beranda</a>
-								<a href="#" class="hover:text-primary px-2 py-4 font-normal text-gray-800 transition duration-300">Tentang
-										Kami</a>
-								<a href="#"
-										class="hover:text-primary px-2 py-4 font-normal text-gray-800 transition duration-300">Gedung</a>
-								<a href="#"
-										class="hover:text-primary px-2 py-4 font-normal text-gray-800 transition duration-300">Kontak</a>
+								<a href="{{ route('home') }}"
+										class="{{ Route::is('home') ? 'text-primary font-semibold' : 'text-gray-800 font-normal' }} hover:text-primary px-2 py-4 transition duration-300">
+										Beranda
+								</a>
+								<a href="{{ route('about') }}"
+										class="{{ Route::is('about') ? 'text-primary font-semibold' : 'text-gray-800 font-normal' }} hover:text-primary px-2 py-4 transition duration-300">
+										Tentang Kami
+								</a>
+								<a href="{{ route('venues') }}"
+										class="{{ Route::is('venues') ? 'text-primary font-semibold' : 'text-gray-800 font-normal' }} hover:text-primary px-2 py-4 transition duration-300">
+										Gedung
+								</a>
+								<a href="{{ route('contact') }}"
+										class="{{ Route::is('contact') ? 'text-primary font-semibold' : 'text-gray-800 font-normal' }} hover:text-primary px-2 py-4 transition duration-300">
+										Kontak
+								</a>
 						</div>
 
 						@if (Auth::check())
@@ -38,9 +48,9 @@
 														class="ring-secondary absolute right-0 z-50 hidden w-48 overflow-hidden rounded-md bg-white shadow-lg ring-1">
 														<div class="py-1">
 																@if (Auth::user()->role == 'ADMIN')
-																		<form action="{{ route('filament.admin.pages.dashboard') }}" method="GET"><button type="submit"
-																						class="hover:bg-secondary w-full px-4 py-2 text-left text-sm font-medium text-gray-700 transition duration-300">Dashboard
-																						</button">
+																		<form action="{{ route('filament.admin.pages.dashboard') }}" method="GET">
+																				<button type="submit"
+																						class="hover:bg-secondary w-full px-4 py-2 text-left text-sm font-medium text-gray-700 transition duration-300">Dashboard</button>
 																		</form>
 																@endif
 																<form method="POST" action="{{ route('logout') }}" class="block">
@@ -54,17 +64,21 @@
 								</div>
 						@else
 								<div class="hidden items-center space-x-1 md:flex">
-										<a href="{{ route('login') }}"><button
+										<a href="{{ route('login') }}">
+												<button
 														class="bg-secondary text-primary flex cursor-pointer items-center gap-2 rounded-lg px-4 py-1.5 font-medium transition duration-300 hover:bg-blue-200">
 														Masuk
 														<span><img class="my-auto w-5" src="{{ asset('icons/Login_square_fill.svg') }}" alt="Login icon"></span>
-												</button></a>
-										<a href="{{ route('register') }}"><button
+												</button>
+										</a>
+										<a href="{{ route('register') }}">
+												<button
 														class="bg-primary flex cursor-pointer items-center gap-2 rounded-lg px-4 py-1.5 font-medium text-white transition duration-300 hover:bg-blue-700">
 														Daftar
 														<span><img class="my-auto w-5" src="{{ asset('icons/Sign_in_square_fill.svg') }}"
 																		alt="Register icon"></span>
-												</button></a>
+												</button>
+										</a>
 								</div>
 						@endif
 
@@ -84,20 +98,29 @@
 		<div class="mobile-menu overflow-hidden md:hidden">
 				<div id="menu-content" class="max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
 						<ul class="bg-white/80 backdrop-blur-md">
-								<li class="active">
-										<a href="#" class="block bg-blue-500 px-3 py-4 text-sm font-semibold text-white">Beranda</a>
+								<li>
+										<a href="{{ route('home') }}"
+												class="{{ Route::is('home') ? 'bg-blue-500 text-white' : 'text-gray-800' }} block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">
+												Beranda
+										</a>
 								</li>
 								<li>
-										<a href="#"
-												class="block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">Tentang Kami</a>
+										<a href="{{ route('about') }}"
+												class="{{ Route::is('about') ? 'bg-blue-500 text-white' : 'text-gray-800' }} block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">
+												Tentang Kami
+										</a>
 								</li>
 								<li>
-										<a href="#"
-												class="block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">Gedung</a>
+										<a href="{{ route('venues') }}"
+												class="{{ Route::is('venues') ? 'bg-blue-500 text-white' : 'text-gray-800' }} block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">
+												Gedung
+										</a>
 								</li>
 								<li>
-										<a href="#"
-												class="block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">Kontak</a>
+										<a href="{{ route('contact') }}"
+												class="{{ Route::is('contact') ? 'bg-blue-500 text-white' : 'text-gray-800' }} block px-3 py-4 text-sm transition duration-300 hover:bg-blue-500 hover:text-white">
+												Kontak
+										</a>
 								</li>
 
 								@if (Auth::check())
@@ -106,7 +129,7 @@
 												<div class="px-3 py-3">
 														<p class="mb-2 text-sm font-medium">Halo, {{ Auth::user()->name }}</p>
 														@if (Auth::user()->role == 'ADMIN')
-																<form action="{{ route('filament.admin.pages.dashboard') }} method="GET">
+																<form action="{{ route('filament.admin.pages.dashboard') }}" method="GET">
 																		<button type="submit"
 																				class="w-full px-4 py-2 text-left text-sm text-gray-700 transition duration-300 hover:bg-gray-100">Dashboard</button>
 																</form>

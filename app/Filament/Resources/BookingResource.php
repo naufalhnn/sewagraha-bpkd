@@ -7,6 +7,7 @@ use App\Filament\Resources\BookingResource\RelationManagers;
 use App\Models\Booking;
 use App\Models\Venue;
 use Carbon\Carbon;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -17,7 +18,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -61,7 +64,7 @@ class BookingResource extends Resource
                             TextInput::make('phone')->label('Nomor Telepon')->required()->maxLength(16),
                             TextInput::make('password')->label('Kata Sandi')->required()->default('12345678'),
                         ]);
-                    }),
+                    })->visibleOn('create'),
                 Select::make('venue_id')
                     ->relationship('venue', 'name')
                     ->label('Gedung')
@@ -80,8 +83,8 @@ class BookingResource extends Resource
                             $set('base_price_display', null);
                             $set('base_price', null);
                         }
-                    }),
-                TextInput::make('purpose')->label('Keperluan')->required()->maxLength(255),
+                    })->visibleOn('create'),
+                TextInput::make('purpose')->label('Keperluan')->required()->maxLength(255)->visibleOn('create'),
                 DatePicker::make('event_start_date')
                     ->label('Tanggal Mulai')
                     ->required()
@@ -89,7 +92,7 @@ class BookingResource extends Resource
                     ->timezone('Asia/Jakarta')
                     ->native(false)
                     ->displayFormat('d F Y')
-                    ->reactive(),
+                    ->reactive()->visibleOn('create'),
                 DatePicker::make('event_end_date')
                     ->label('Tanggal Selesai')
                     ->required()
@@ -97,12 +100,14 @@ class BookingResource extends Resource
                     ->timezone('Asia/Jakarta')
                     ->native(false)
                     ->displayFormat('d F Y')
-                    ->reactive(),
+                    ->reactive()
+                    ->visibleOn('create'),
                 TextInput::make('booking_code')
                     ->label('Kode Booking (Auto Generate)')
                     ->default(fn() => BookingResource::generateBookingCode())
                     ->disabled()
                     ->dehydrated(true)
+                    ->visibleOn('create')
                     ->visibleOn('create'),
                 TextInput::make('booking_code')
                     ->label('Kode Booking')
@@ -133,7 +138,7 @@ class BookingResource extends Resource
                         $totalPrice = $venue->base_price * $daysDifference;
 
                         return "Rp. " . number_format($totalPrice, 0, ',', '.');
-                    }),
+                    })->visibleOn('create'),
 
                 // Add this inside your BookingResource form() method, replace the Hidden total_price field
                 Hidden::make('total_price')
@@ -183,7 +188,20 @@ class BookingResource extends Resource
                         $totalPrice = $venue->base_price * $daysDifference;
 
                         $set('total_price', $totalPrice);
-                    }),
+                    })->visibleOn('create'),
+                Select::make('status')
+                    ->label('Status Reservasi')
+                    ->options([
+                        'PENDING' => 'Menunggu Konfirmasi',
+                        'CONFIRMED' => 'Dikonfirmasi',
+                        'COMPLETED' => 'Selesai',
+                        'CANCELED' => 'Dibatalkan',
+                    ])
+                    ->required()
+                    ->default('PENDING')
+                    ->placeholder('Pilih Status Reservasi')
+                    ->visibleOn('edit'), // Hanya muncul pada form edit
+
             ])->columns(1);
     }
 
@@ -194,10 +212,20 @@ class BookingResource extends Resource
                 Tables\Columns\TextColumn::make('booking_code')->label('Kode Pemesanan'),
                 Tables\Columns\TextColumn::make('venue.name')->label('Gedung'),
                 Tables\Columns\TextColumn::make('user.name')->label('Pemesan'),
+                Tables\Columns\TextColumn::make('user.phone')->label('Telepon'),
                 Tables\Columns\TextColumn::make('purpose')->label('Keperluan'),
                 Tables\Columns\TextColumn::make('event_start_date')->label('Tanggal Mulai')->date('d F Y'),
                 Tables\Columns\TextColumn::make('event_end_date')->label('Tanggal Selesai')->date('d F Y'),
                 Tables\Columns\TextColumn::make('total_price')->label('Total Harga')->money('IDR'),
+                Tables\Columns\TextColumn::make('payments.status')
+                    ->label('Status Pembayaran')
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'PENDING' => 'Belum Dibayar',
+                        'PAID' => 'Dibayar',
+                        'FAILED' => 'Dibatalkan',
+                        'REFUNDED' => 'Dikembalikan',
+                        default => $state,
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -220,7 +248,7 @@ class BookingResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Ubah Status'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

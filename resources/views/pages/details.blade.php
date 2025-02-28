@@ -33,7 +33,7 @@
 												</button>
 										</div>
 								</div>
-								<div class="absolute w-1/3">
+								<div class="absolute max-w-lg">
 										<h2 class="my-4 text-xl font-semibold">Deskripsi Gedung</h2>
 										<div class="flex flex-col gap-2">
 												<p class="text-base font-normal text-gray-700">{{ $venue->description }}</p>
@@ -68,23 +68,31 @@
 								</div>
 
 						</div>
-						<div class="rounded-xl bg-white p-6 shadow-lg">
+						<div class="outline-secondary rounded-xl bg-white p-6 shadow-lg outline-1">
 								<h2 class="mb-4 text-2xl font-semibold">Pesan Gedung</h2>
-								<form action="{{ route('bookings.store') }}" method="POST" class="space-y-4">
+								<form action="{{ route('bookings.store') }}" method="POST" enctype="multipart/form-data" class="mt-6 space-y-4">
 										@csrf
 										<input type="hidden" name="venue_id" value="{{ $venue->id }}">
 										<input type="hidden" name="user_id" value="{{ auth()->id() }}">
 
 										<div>
 												<label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-												<input type="text" name="name" class="mt-1 w-full rounded-lg border border-gray-300 p-2"
-														value="{{ auth()->user()->name }}" required>
+												@if (Auth::check())
+														<input type="text" name="name" class="mt-1 w-full rounded-lg border border-gray-300 p-2"
+																value="{{ auth()->user()->name }}" required>
+												@else
+														<input type="text" name="name" class="mt-1 w-full rounded-lg border border-gray-300 p-2" required>
+												@endif
 										</div>
 
 										<div>
 												<label class="block text-sm font-medium text-gray-700">Email</label>
-												<input type="email" name="email" class="mt-1 w-full rounded-lg border border-gray-300 p-2"
-														value="{{ auth()->user()->email }}" required>
+												@if (Auth::check())
+														<input type="email" name="email" class="mt-1 w-full rounded-lg border border-gray-300 p-2"
+																value="{{ auth()->user()->email }}" required>
+												@else
+														<input type="email" name="email" class="mt-1 w-full rounded-lg border border-gray-300 p-2" required>
+												@endif
 										</div>
 
 										<div>
@@ -110,6 +118,18 @@
 														class="mt-1 w-full rounded-lg border border-gray-300 bg-gray-100 p-2" readonly>
 										</div>
 
+										<div>
+												<label class="block text-sm font-medium text-gray-700">Upload KTP atau Identitas Lain</label>
+												<input type="file" name="ktp_image" id="ktp_image" required
+														class="mt-1 w-full rounded-lg border border-gray-300 p-2 file:mr-5 file:border-[1px] file:bg-stone-50 file:px-3 file:py-1 file:text-xs file:font-medium file:text-stone-700 hover:file:cursor-pointer hover:file:bg-blue-50 hover:file:text-blue-700">
+										</div>
+
+										<div class="form-group mb-3">
+												<div id="imagePreview" class="mt-2" style="display: none">
+														<img id="preview" src="#" alt="Preview" style="max-width: 300px; max-height: 300px">
+												</div>
+										</div>
+
 										<button type="submit" class="w-full cursor-pointer rounded-lg bg-blue-600 py-2 text-white hover:bg-blue-700">
 												Pesan Sekarang
 										</button>
@@ -118,3 +138,41 @@
 				</div>
 		</section>
 @endsection
+
+@push('script')
+		<script>
+				document.addEventListener("DOMContentLoaded", function() {
+						const startDateInput = document.getElementById("event_start_date");
+						const endDateInput = document.getElementById("event_end_date");
+						const totalPriceInput = document.getElementById("total_price");
+						const basePrice = {{ $venue->base_price }};
+
+						function calculateTotalPrice() {
+								const startDate = new Date(startDateInput.value);
+								const endDate = new Date(endDateInput.value);
+								if (!isNaN(startDate) && !isNaN(endDate)) {
+										let dayCount = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+										dayCount = dayCount > 0 ? dayCount + 1 : 1;
+										totalPriceInput.value = "Rp " + (dayCount * basePrice).toLocaleString("id-ID");
+								}
+						}
+
+						startDateInput.addEventListener("change", calculateTotalPrice);
+						endDateInput.addEventListener("change", calculateTotalPrice);
+				});
+		</script>
+
+		<script>
+				document.getElementById('ktp_image').addEventListener('change', function(e) {
+						const preview = document.getElementById('preview');
+						const imagePreview = document.getElementById('imagePreview');
+
+						if (e.target.files.length > 0) {
+								preview.src = URL.createObjectURL(e.target.files[0]);
+								imagePreview.style.display = 'block';
+						} else {
+								imagePreview.style.display = 'none';
+						}
+				});
+		</script>
+@endpush

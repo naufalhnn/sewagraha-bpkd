@@ -20,12 +20,16 @@
 										menyediakan gedung dengan kapasitas fleksibel, fasilitas modern dan area parkir luas dengan harga yang
 										terjangkau dan paket yang dapat disesuaikan dengan kebutuhan Anda!</p>
 								<div class="mt-6 flex w-full flex-col justify-between gap-2 md:w-4/5 md:flex-row">
-										<button
-												class="bg-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg py-3 font-medium text-white shadow-xl transition duration-300 hover:bg-blue-700">Pesan
-												Sekarang<span><img src="{{ asset('icons/Arrow_drop_right.svg') }}" alt="Arrow icon"></span></button>
-										<button
-												class="text-primary outline-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-white py-3 font-medium shadow-xl outline transition duration-300 hover:bg-blue-50">Hubungi
-												Kami<span><img src="{{ asset('icons/Arrow_drop_right_blue.svg') }}" alt="Arrow icon"></span></button>
+										<form class="w-full" action="{{ route('venues') }}" method="GET">
+												<button
+														class="bg-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg py-3 font-medium text-white shadow-xl transition duration-300 hover:bg-blue-700">Pesan
+														Sekarang<span><img src="{{ asset('icons/Arrow_drop_right.svg') }}" alt="Arrow icon"></span></button>
+										</form>
+										<form class="w-full" action="{{ route('contact') }}" method="GET">
+												<button
+														class="text-primary outline-primary flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-white py-3 font-medium shadow-xl outline transition duration-300 hover:bg-blue-50">Hubungi
+														Kami<span><img src="{{ asset('icons/Arrow_drop_right_blue.svg') }}" alt="Arrow icon"></span></button>
+										</form>
 								</div>
 						</div>
 						<div class="hidden md:block md:w-1/2"><img src="{{ asset('images/hero.png') }}" alt="Hero image"></div>
@@ -84,10 +88,13 @@
 						{{-- card --}}
 						<div class="no-scrollbar flex space-x-4 overflow-x-auto p-4">
 								@foreach ($venues as $venue)
-										<div class="bg-secondary min-w-[250px] overflow-hidden rounded-lg p-3 shadow-lg">
-												<img src="{{ asset('images/dummy_img.jpg') }}" alt="Gambar Card" class="h-48 w-full rounded-lg object-cover">
-												<div class="p-3">
+										<div class="bg-secondary flex w-[250px] flex-col justify-between overflow-hidden rounded-lg p-3 shadow-lg">
+												<img src="{{ Storage::url($venue->venueImages->first()->image_path) }}" alt="Gambar Card"
+														class="h-48 w-full rounded-lg object-cover">
+												<div class="px-3">
 														<h2 class="text-left text-lg font-semibold text-gray-700">{{ $venue->name }}</h2>
+												</div>
+												<div class="px-3">
 														<div class="mt-2 flex items-center gap-2">
 																<div class="rounded-md bg-white p-1"><img class="w-2.5" src="{{ asset('icons/location.svg') }}"
 																				alt="">

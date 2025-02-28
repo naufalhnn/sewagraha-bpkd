@@ -19,4 +19,25 @@ class AppController extends Controller
         $venue = Venue::with(['venueImages', 'purposes', 'facilities'])->find($id);
         return view('pages.details', compact('venue'));
     }
+
+    public function contact()
+    {
+        return view('pages.contact');
+    }
+
+    public function about()
+    {
+        return view('pages.about');
+    }
+
+    public function venues()
+    {
+        $venues = Venue::with('venueImages')->get();
+        return view('pages.venues', compact('venues'));
+    }
+
+    public function success()
+    {
+        return view('pages.payment-success');
+    }
 }

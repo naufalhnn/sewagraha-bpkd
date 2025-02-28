@@ -205,27 +205,7 @@
 						});
 				</script>
 
-				<script>
-						document.addEventListener("DOMContentLoaded", function() {
-								const startDateInput = document.getElementById("event_start_date");
-								const endDateInput = document.getElementById("event_end_date");
-								const totalPriceInput = document.getElementById("total_price");
-								const basePrice = {{ $venue->base_price }};
-
-								function calculateTotalPrice() {
-										const startDate = new Date(startDateInput.value);
-										const endDate = new Date(endDateInput.value);
-										if (!isNaN(startDate) && !isNaN(endDate)) {
-												let dayCount = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-												dayCount = dayCount > 0 ? dayCount + 1 : 1;
-												totalPriceInput.value = "Rp " + (dayCount * basePrice).toLocaleString("id-ID");
-										}
-								}
-
-								startDateInput.addEventListener("change", calculateTotalPrice);
-								endDateInput.addEventListener("change", calculateTotalPrice);
-						});
-				</script>
+				@stack('script')
 		</body>
 
 </html>

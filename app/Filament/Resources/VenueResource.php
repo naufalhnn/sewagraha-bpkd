@@ -62,24 +62,24 @@ class VenueResource extends Resource
               ->disk('public')
               ->visibility('public')
               ->columnSpanFull()
-              ->afterStateUpdated(function (Venue $record, $state) {
-                if (! $record->exists) {
-                  return;
-                }
+              // ->afterStateUpdated(function (Venue $record, $state) {
+              //   if (! $record->exists) {
+              //     return;
+              //   }
 
-                // Hapus gambar yang tidak ada lagi dalam state
-                $existingImagePaths = $record->venueImages->pluck('image_path')->toArray();
-                $newImagePaths = $state ?? [];
+              //   // Hapus gambar yang tidak ada lagi dalam state
+              //   $existingImagePaths = $record->venueImages->pluck('image_path')->toArray();
+              //   $newImagePaths = $state ?? [];
 
-                $imagesToDelete = array_diff($existingImagePaths, $newImagePaths);
-                foreach ($imagesToDelete as $imagePath) {
-                  $venueImage = $record->venueImages()->where('image_path', $imagePath)->first();
-                  if ($venueImage) {
-                    Storage::disk('public')->delete($imagePath);
-                    $venueImage->delete();
-                  }
-                }
-              })
+              //   $imagesToDelete = array_diff($existingImagePaths, $newImagePaths);
+              //   foreach ($imagesToDelete as $imagePath) {
+              //     $venueImage = $record->venueImages()->where('image_path', $imagePath)->first();
+              //     if ($venueImage) {
+              //       Storage::disk('public')->delete($imagePath);
+              //       $venueImage->delete();
+              //     }
+              //   }
+              // })
               ->saveRelationshipsUsing(function (Venue $record, $state) {
                 if (! $state) {
                   return;
@@ -87,7 +87,6 @@ class VenueResource extends Resource
 
                 $existingImagePaths = $record->venueImages->pluck('image_path')->toArray();
 
-                // Tambahkan gambar baru
                 foreach ($state as $imagePath) {
                   if (!in_array($imagePath, $existingImagePaths)) {
                     $record->venueImages()->create([

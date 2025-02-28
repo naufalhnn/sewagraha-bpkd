@@ -20,6 +20,7 @@ class Booking extends Model
         'event_end_date',
         'purpose',
         'total_price',
+        'ktp_image_path',
         'status',
     ];
 
