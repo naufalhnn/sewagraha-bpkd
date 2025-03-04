@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('/')->with('success', 'Registrasi berhasil!');
+        return redirect()->route('home')->with('success', 'Registrasi berhasil!');
     }
 
     public function loginForm(): View
@@ -62,6 +62,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('home');
     }
 }
